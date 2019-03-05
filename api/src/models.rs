@@ -4,14 +4,14 @@ use ::diesel::pg::PgConnection;
 use crate::schema::posts;
 use crate::schema::posts::dsl::posts as all_posts;
 
-#[derive(diesel::Queryable)]
+#[derive(Queryable)]
 pub struct Post {
     pub id: i32,
     pub title: String,
     pub subtitle: String,
 }
 
-#[derive(diesel::Insertable)]
+#[derive(Insertable)]
 #[table_name = "posts"]
 pub struct NewPost<'a> {
     pub title: &'a str,
