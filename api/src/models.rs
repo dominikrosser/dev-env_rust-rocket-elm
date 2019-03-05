@@ -4,20 +4,29 @@ use ::diesel::pg::PgConnection;
 use crate::schema::posts;
 use crate::schema::posts::dsl::posts as all_posts;
 
-#[derive(Queryable)]
+//use serde_derive;
+//use serde_json;
+
+#[derive(Queryable)]    // Queryable from db table
+#[derive(Serialize)]    // Convertable to json
+#[derive(Debug)]        // Convertable to debug string
+//#[derive(Clone)]      // Cloneable / copyable
 pub struct Post {
     pub id: i32,
     pub title: String,
     pub subtitle: String,
 }
 
-#[derive(Insertable)]
-#[table_name = "posts"]
+#[derive(Insertable)]   // Insertable to db table
+#[derive(Serialize)]    // Convertable to json
+#[derive(Deserialize)]  // Convertable from json
+#[table_name = "posts"] // Table name: "posts"
 pub struct NewPost<'a> {
     pub title: &'a str,
     pub subtitle: &'a str,
 }
 
+/** Example CRUD */
 impl Post {
 
     pub fn get_by_id(id: i32, conn: &PgConnection) -> Vec<Post> {

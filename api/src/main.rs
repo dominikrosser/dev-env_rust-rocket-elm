@@ -1,7 +1,8 @@
 #![feature(custom_attribute)]   // Enable custom attributes like 'table_name'
-//#![feature(plugin)]             //
-#![feature(custom_derive)]      // Lets us apply procedural macros
+//#![feature(plugin)]           //
+//#![feature(proc_macro_derive)]  // Lets us apply procedural macros
 #![feature(const_fn)]           // Allows us to define inline functions
+#![feature(proc_macro_hygiene)] // TODO: This ist for rocket but what does this macro do?
 #![feature(decl_macro)]         // Allows us to create declarative macros
 #![allow(dead_code)]            // Disable warning for dead code
 
@@ -10,36 +11,38 @@
 extern crate diesel;            //TODO: Remove imports, import with use only since rust 2018
 //extern crate r2d2;
 //extern crate r2d2_diesel;
-//extern crate rocket;
+#[macro_use]
+extern crate rocket;            //TODO: Remove imports, import with use only since rust 2018
 //extern crate rocket_contrib;
-//#[macro_use]
-//extern crate serde_derive;
-//#[macro_use]
-//extern crate serde_json;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_json;
 
-mod schema;// Contains the db schema of diesel
-mod models;// Contains the db models and functionality to read, update, insert
+mod schema;         // Contains the db schema of diesel
+mod models;         // Contains the db models and functionality to read, update, insert
+mod db;             // Contains helpers for the database connection pool 
+mod static_files;   // Containes api routes for serving static files
 
-use diesel::prelude::*;
-use diesel::pg::PgConnection;
-use dotenv::dotenv;
-use std::env;
+//use ::diesel::prelude::*;
+//use ::diesel::pg::PgConnection;
+use ::dotenv::dotenv;
+use ::std::env;
+//use ::rocket;
+//use ::diesel;
 
-fn main() {
-
-    // Read DATABASE_URL from .env
+fn init_rocket() -> rocket::Rocket {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("set DATABASE_URL");
-    // Establish db connection
-    let conn = PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url));
-    // Insert new post
-    let post = crate::models::NewPost {
-        title: "Hallo Welt Tutorial Post",
-        subtitle: "Dies ist der Untertitel",
-    };
-    if crate::models::Post::insert(post, &conn) {
-        println!("success");
-    } else {
-        println!("failure");
-    }
+    let pool = db::init_pool(&database_url);
+    rocket::ignite()
+        .manage(pool)
+        .mount("/", routes![static_files::all, static_files::index])
+}
+
+fn launch_api() {
+    init_rocket().launch();
+}
+
+fn main() {
+    launch_api();
 }
