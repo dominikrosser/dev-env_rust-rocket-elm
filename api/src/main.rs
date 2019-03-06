@@ -10,8 +10,8 @@ extern crate diesel;            //TODO: Remove imports, import with use only sin
 #[macro_use]
 extern crate rocket;            //TODO: Remove imports, import with use only since rust 2018
 #[macro_use]
-extern crate serde_derive;
-extern crate serde_json;
+extern crate serde_derive;      //TODO: Remove imports, import with use only since rust 2018
+extern crate serde_json;        //TODO: Remove imports, import with use only since rust 2018
 
 mod schema;         // Contains the db schema of diesel
 mod models;         // Contains the db models and functionality to read, update, insert
