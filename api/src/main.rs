@@ -27,19 +27,26 @@ use ::std::env;
 use crate::routes::*;
 
 fn init_rocket() -> rocket::Rocket {
+    // Read DATABASE_URL from .env
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("set DATABASE_URL");
+    // Init postgres connection pool managed by r2d2
     let pool = db::init_pool(&database_url);
+    // Start up the rocket api / server
     rocket::ignite()
+        // Use the above created r2d2 postgres connection pool
         .manage(pool)
+        // Mount the api routes
         .mount(
             "/api/v1/",
             routes![routes::index, routes::new, routes::show, routes::delete, routes::update]
         )
+        // Mount all the other routes to serve frontent SPA or static files
         .mount(
             "/",
             routes![static_files::all, static_files::index]
         )
+        // Catch every other rout with a 404
         .register(catchers![routes::not_found])
 }
 
