@@ -2,7 +2,6 @@ use crate::db::Conn as DbConn;
 use crate::models::{Post, NewPost};
 use ::rocket_contrib::json::Json;
 use ::rocket_contrib::json::JsonValue;
-use ::serde_json::Value;
 
 #[get("/posts", format = "application/json")]
 pub fn index(conn: DbConn) -> JsonValue {

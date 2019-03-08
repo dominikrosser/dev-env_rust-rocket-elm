@@ -24,8 +24,6 @@ mod routes;         // Contains api routs that serve json
 use ::dotenv::dotenv;
 use ::std::env;
 
-use crate::routes::*;
-
 fn init_rocket() -> rocket::Rocket {
     // Read DATABASE_URL from .env
     dotenv().ok();
