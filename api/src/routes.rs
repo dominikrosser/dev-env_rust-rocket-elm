@@ -14,6 +14,8 @@ pub fn index(conn: DbConn) -> JsonValue {
     })
 }
 
+/** FIXME: I tested POST with postman, but it doesn't apply this handler,
+ *         instead it routes to the 404 catcher... */
 #[post("/posts", format= "application/json", data = "<new_post>")]
 pub fn new(conn: DbConn, new_post: Json<NewPost>) -> JsonValue {
     json!({

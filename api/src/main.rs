@@ -18,8 +18,8 @@ extern crate rocket_contrib;    //TODO: Remove imports, import with use only sin
 mod schema;         // Contains the db schema of diesel
 mod models;         // Contains the db models and functionality to read, update, insert
 mod db;             // Contains helpers for the database connection pool 
-mod static_files;   // Containes api routes for serving static files
-mod routes;
+mod static_files;   // Contains api routes for serving static files
+mod routes;         // Contains api routs that serve json
 
 use ::dotenv::dotenv;
 use ::std::env;
