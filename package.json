@@ -2,7 +2,11 @@
   "name": "app-name",
   "version": "0.0.1",
   "main": "",
-  "repository": " ",
+  "repository": "",
   "author": "Dominik Rosser <dominik.rosser@protonmail.ch>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "elm": "0.19"
+  }
 }
