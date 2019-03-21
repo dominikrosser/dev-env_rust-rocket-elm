@@ -2,6 +2,9 @@
   "name": "app-name",
   "version": "0.0.1",
   "main": "",
+	"scripts": {
+		"start": "cd api && cargo run"
+	},
   "repository": "",
   "author": "Dominik Rosser <dominik.rosser@protonmail.ch>",
   "license": "MIT",
