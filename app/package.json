@@ -2,7 +2,12 @@
   "name": "app",
   "version": "1.0.0",
   "description": "Frontend part of dev-env",
-  "main": "",
+  "main": "brunch-config.js",
+	"scripts": {
+		"start": "brunch build",
+		"deploy": "brunch build --production",
+		"watch": "brunch watch --stdin"
+	},
   "author": "Dominik Rosser",
   "license": "MIT",
   "devDependencies": {
