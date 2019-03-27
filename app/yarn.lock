@@ -860,6 +860,11 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+elm-brunch@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/elm-brunch/-/elm-brunch-0.12.0.tgz#39cba6c4e6d588e8da41fcd9eb470222ba878525"
+  integrity sha512-+5mhlszoUs4V/6LPXBYX9mhTk68sOkfxnxaQWwA2fRwLEf6adG2knWTpOE7W1QTudnZ5rgtIlGPCU8DzdmlkyQ==
+
 elm@0.19:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/elm/-/elm-0.19.0.tgz#c6ad86afea9e971424ebe75e36c9d03412a787fa"

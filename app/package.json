@@ -2,11 +2,12 @@
   "name": "app",
   "version": "1.0.0",
   "description": "Frontend part of dev-env",
-  "main": " ",
+  "main": "",
   "author": "Dominik Rosser",
   "license": "MIT",
   "devDependencies": {
     "brunch": "^2.10.17",
-    "elm": "0.19"
+    "elm": "0.19",
+    "elm-brunch": "^0.12.0"
   }
 }
