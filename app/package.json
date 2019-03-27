@@ -11,6 +11,7 @@
     "brunch": "^2.10.17",
     "clean-css-brunch": "^2.10.0",
     "elm": "0.19",
-    "elm-brunch": "^0.12.0"
+    "elm-brunch": "^0.12.0",
+    "node-elm-compiler": "^5.0.3"
   }
 }
