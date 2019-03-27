@@ -6,6 +6,7 @@
   "author": "Dominik Rosser",
   "license": "MIT",
   "devDependencies": {
+    "brunch": "^2.10.17",
     "elm": "0.19"
   }
 }
