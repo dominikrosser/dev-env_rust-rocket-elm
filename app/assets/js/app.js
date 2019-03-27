@@ -1,4 +1,4 @@
-import Elm from './main';
+import Elm from '../compiled-elm-app/main';// FIXME can't include
 
 const elmDiv = document.querySelector('#elm-container');
 

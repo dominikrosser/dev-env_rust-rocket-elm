@@ -22,14 +22,14 @@ exports.config = {
 		},
 		elmBrunch: {
 			elmFolder: ".",
-			mainModules: ["src/App.elm"],
-			outputFolder: "./assets"
+			mainModules: ["src/main.elm"],
+			outputFolder: "./assets/compiled-elm-app"
 		},
 		
 	},
 	modules: {
 		autoRequire: {
-			"./assets/app.js": ["js/app"]
+			"./assets/js/app.js": ["js/main"]
 		}
 	}
 }
