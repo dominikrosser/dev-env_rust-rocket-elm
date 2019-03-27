@@ -1,0 +1,38 @@
+Arguments: 
+  /usr/local/Cellar/node/11.6.0/bin/node /usr/local/Cellar/yarn/1.12.3/libexec/bin/yarn.js add elm@0.19 --dev
+
+PATH: 
+  /opt/local/bin:/Users/domi/.cargo/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
+
+Yarn version: 
+  1.12.3
+
+Node version: 
+  11.6.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/domi/dev/src/github.com/dominikrosser/dev-env_rust+rocket+elm/app/package.json: Unexpected token } in JSON at position 151
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:1631:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:304:30)
+      at /usr/local/Cellar/yarn/1.12.3/libexec/lib/cli.js:315:13
+
+npm manifest: 
+  {
+    "name": "app",
+    "version": "1.0.0",
+    "description": "Frontend part of dev-env",
+    "main": " ",
+    "author": "Dominik Rosser",
+    "license": "MIT",
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

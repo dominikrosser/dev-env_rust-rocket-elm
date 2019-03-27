@@ -1,0 +1,11 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "Frontend part of dev-env",
+  "main": " ",
+  "author": "Dominik Rosser",
+  "license": "MIT",
+  "devDependencies": {
+    "elm": "0.19"
+  }
+}
