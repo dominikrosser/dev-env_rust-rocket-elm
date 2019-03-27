@@ -9,6 +9,7 @@
     "auto-reload-brunch": "^2.7.1",
     "babel-brunch": "^7.0.1",
     "brunch": "^2.10.17",
+    "clean-css-brunch": "^2.10.0",
     "elm": "0.19",
     "elm-brunch": "^0.12.0"
   }
