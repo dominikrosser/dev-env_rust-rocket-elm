@@ -7,9 +7,9 @@ exports.config = {
 			joinTo: "css/app.css"
 		}
 	},
-	// conventions: {
-	//   assets: /^(static)/
-	// },
+	//conventions: {
+	//  assets: /^(static)/
+	//},
 	paths: {
 		watched: [
 			"assets", "src"//, "vendor", "static"
@@ -18,18 +18,21 @@ exports.config = {
 	},
 	plugins: {
 		babel: {
-			// ignore: [/vendor/]
+			//ignore: [/vendor/]
 		},
 		elmBrunch: {
 			elmFolder: ".",
 			mainModules: ["src/main.elm"],
-			outputFolder: "./assets/compiled-elm-app"
+			outputFolder: "./assets/js",
+			outputFile: "compiled-elm-app.js",
+			optimize: true,
+			makeParameters: ['']
 		},
 		
 	},
 	modules: {
-		autoRequire: {
-			"./assets/js/app.js": ["js/main"]
-		}
+		//autoRequire: {
+		//	"./assets/js/app.js": ["js/main"]
+		//}
 	}
 }
