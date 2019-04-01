@@ -1,14 +1,14 @@
 exports.config = {
 	files: {
 		javascripts: {
-			joinTo: "js/app.js"
+			joinTo: "js/app1.js"
 		},
 		stylesheets: {
-			joinTo: "css/app.css"
+			joinTo: "css/app1.css"
 		}
 	},
 	//conventions: {
-	//  assets: /^(static)/
+	// assets: /^(static)/
 	//},
 	paths: {
 		watched: [
@@ -18,7 +18,7 @@ exports.config = {
 	},
 	plugins: {
 		babel: {
-			//ignore: [/vendor/]
+			ignore: [/vendor/]
 		},
 		elmBrunch: {
 			elmFolder: ".",

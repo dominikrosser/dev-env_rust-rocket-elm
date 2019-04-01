@@ -4364,5 +4364,5 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 };
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
-var author$project$Main$main = elm$html$Html$text('Hello World!');
+var author$project$Main$main = elm$html$Html$text('This is an app4 test Hello World');
 _Platform_export({'Main':{'init':_VirtualDom_init(author$project$Main$main)(0)(0)}});}(this));
