@@ -8,6 +8,9 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Http
+import Json.Decode
+import RemoteData exposing (WebData)
 import Url
 import Url.Parser exposing ((</>))
 
@@ -97,9 +100,9 @@ toRoute url =
 routeParser : Url.Parser.Parser (Route -> a) a
 routeParser =
     Url.Parser.oneOf
-        [ Url.Parser.map HomeRoute  (Url.Parser.top)
+        [ Url.Parser.map HomeRoute Url.Parser.top
         , Url.Parser.map PostsRoute (Url.Parser.s "posts")
-        , Url.Parser.map PostRoute  (Url.Parser.s "posts" </> Url.Parser.int)
+        , Url.Parser.map PostRoute (Url.Parser.s "posts" </> Url.Parser.int)
         ]
 
 
@@ -135,6 +138,7 @@ viewHeader : Model -> Html Msg
 viewHeader model =
     div []
         [ text "-- HEADER --"
+        , br [] []
         , ul []
             [ li [] [ a [ href "/" ] [ text "home" ] ]
             , li [] [ viewLink "posts" ]
@@ -151,6 +155,7 @@ viewContent : Model -> Html Msg
 viewContent model =
     div []
         [ text "-- CONTENT: "
+        , br [] []
         , viewPage model
         ]
 
@@ -163,7 +168,7 @@ viewPage model =
 
         PostsRoute ->
             postsPage model
-        
+
         PostRoute id ->
             postPage model id
 
@@ -175,6 +180,7 @@ viewFooter : Model -> Html Msg
 viewFooter model =
     div []
         [ text "-- FOOTER --"
+        , br [] []
         ]
 
 
@@ -191,6 +197,33 @@ postsPage model =
 postPage : Model -> Int -> Html Msg
 postPage model postId =
     text ("Post Page (Id: " ++ String.fromInt postId)
+
+
+postsTableHeader : Html Msg
+postsTableHeader =
+    tr []
+        [ th [] [ text "ID" ]
+        , th [] [ text "Title" ]
+        , th [] [ text "Author" ]
+        ]
+
+
+viewPosts : List Post -> Html Msg
+viewPosts posts =
+    div []
+        [ h3 [] [ text "Posts" ]
+        , table []
+            ([ postsTableHeader ] ++ List.map viewPost posts)
+        ]
+
+
+viewPost : Post -> Html Msg
+viewPost post =
+    tr []
+        [ td [] [ text (String.fromInt post.id) ]
+        , td [] [ text post.title ]
+        , td [] [ text post.subtitle ]
+        ]
 
 
 notFoundPage : Model -> Html Msg
