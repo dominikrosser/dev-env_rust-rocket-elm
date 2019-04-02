@@ -1,4 +1,5 @@
 -- https://guide.elm-lang.org/webapps/navigation.html
+-- https://guide.elm-lang.org/webapps/url_parsing.html
 
 
 module Main exposing (main)
@@ -8,6 +9,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Url
+import Url.Parser
 
 
 
@@ -32,7 +34,7 @@ main =
 
 type alias Model =
     { key : Nav.Key
-    , url : Url.Url
+    , route : Route
     }
 
 
@@ -40,16 +42,26 @@ type alias Flags =
     ()
 
 
-type alias Post = 
+type alias Post =
     { id : Int
     , title : String
     , subtitle : String
     }
 
 
+type Route
+    = Home
+    | Posts
+    | NotFound
+
+
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
-    ( Model key url, Cmd.none )
+    ( { key = key
+      , route = toRoute url
+      }
+    , Cmd.none
+    )
 
 
 
@@ -73,7 +85,20 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | url = url }, Cmd.none )
+            ( { model | route = toRoute url }, Cmd.none )
+
+
+toRoute : Url.Url -> Route
+toRoute url =
+    Maybe.withDefault NotFound (Url.Parser.parse routeParser url)
+
+
+routeParser : Url.Parser.Parser (Route -> a) a
+routeParser =
+    Url.Parser.oneOf
+        [ Url.Parser.map Home Url.Parser.top
+        , Url.Parser.map Posts (Url.Parser.s "posts")
+        ]
 
 
 
@@ -91,26 +116,73 @@ subscriptions _ =
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = "URL Interceptor"
+    { title = "Elm SPA Example"
     , body = viewBody model
     }
 
 
 viewBody : Model -> List (Html Msg)
 viewBody model =
-    [ text "The current URL is: "
-    , b [] [ Html.text (Url.toString model.url) ]
-    , ul []
-        [ viewLink "#home"
-        , viewLink "#profile"
-        , viewLink "#reviews/the-century-of-the-self"
-        , viewLink "#reviews/public-opinion"
-        , viewLink "#reviews/shah-of-shahs"
-        ]
-    , text "Hallo Welt! 123"
+    [ viewHeader model
+    , viewContent model
+    , viewFooter model
     ]
+
+
+viewHeader : Model -> Html Msg
+viewHeader model =
+    div []
+        [ text "-- HEADER --"
+        , ul []
+            [ li [] [ a [ href "/" ] [ text "home" ] ]
+            , li [] [ viewLink "posts" ]
+            ]
+        ]
 
 
 viewLink : String -> Html msg
 viewLink path =
-    li [] [ a [ href path ] [ text path ] ]
+    a [ href ("/" ++ path) ] [ text path ]
+
+
+viewContent : Model -> Html Msg
+viewContent model =
+    div []
+        [ text "-- CONTENT: "
+        , viewPage model
+        ]
+
+
+viewPage : Model -> Html Msg
+viewPage model =
+    case model.route of
+        Home ->
+            homePage model
+
+        Posts ->
+            postsPage model
+
+        NotFound ->
+            notFoundPage model
+
+
+viewFooter : Model -> Html Msg
+viewFooter model =
+    div []
+        [ text "-- FOOTER --"
+        ]
+
+
+homePage : Model -> Html Msg
+homePage model =
+    text "Home Page"
+
+
+postsPage : Model -> Html Msg
+postsPage model =
+    text "Posts Page"
+
+
+notFoundPage : Model -> Html Msg
+notFoundPage model =
+    text "Not Found Page"
