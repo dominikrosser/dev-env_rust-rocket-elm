@@ -40,6 +40,13 @@ type alias Flags =
     ()
 
 
+type alias Post = 
+    { id : Int
+    , title : String
+    , subtitle : String
+    }
+
+
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
     ( Model key url, Cmd.none )
@@ -100,6 +107,7 @@ viewBody model =
         , viewLink "#reviews/public-opinion"
         , viewLink "#reviews/shah-of-shahs"
         ]
+    , text "Hallo Welt! 123"
     ]
 
 

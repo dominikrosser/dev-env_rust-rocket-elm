@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.as,
+		impl.au,
+		impl.aC,
 		impl.aA,
-		impl.ay,
 		function() { return function() {} }
 	);
 });
@@ -3883,11 +3883,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.as,
+		impl.au,
+		impl.aC,
 		impl.aA,
-		impl.ay,
 		function(sendToApp, initialModel) {
-			var view = impl.aB;
+			var view = impl.aD;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3919,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.as,
+		impl.au,
+		impl.aC,
 		impl.aA,
-		impl.ay,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.A && impl.A(sendToApp)
-			var view = impl.aB;
+			var view = impl.aD;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3932,12 +3932,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.al);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.am);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.az) && (_VirtualDom_doc.title = title = doc.az);
+				(title !== doc.ai) && (_VirtualDom_doc.title = title = doc.ai);
 			});
 		}
 	);
@@ -3993,8 +3993,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.au;
-	var onUrlRequest = impl.av;
+	var onUrlChange = impl.aw;
+	var onUrlRequest = impl.ax;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4024,13 +4024,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		as: function(flags)
+		au: function(flags)
 		{
-			return A3(impl.as, flags, _Browser_getUrl(), key);
+			return A3(impl.au, flags, _Browser_getUrl(), key);
 		},
-		aB: impl.aB,
-		aA: impl.aA,
-		ay: impl.ay
+		aD: impl.aD,
+		aC: impl.aC,
+		aA: impl.aA
 	});
 }
 
@@ -4096,17 +4096,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { aq: 'hidden', am: 'visibilitychange' }
+		? { ar: 'hidden', an: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { aq: 'mozHidden', am: 'mozvisibilitychange' }
+		? { ar: 'mozHidden', an: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { aq: 'msHidden', am: 'msvisibilitychange' }
+		? { ar: 'msHidden', an: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { aq: 'webkitHidden', am: 'webkitvisibilitychange' }
-		: { aq: 'hidden', am: 'visibilitychange' };
+		? { ar: 'webkitHidden', an: 'webkitvisibilitychange' }
+		: { ar: 'hidden', an: 'visibilitychange' };
 }
 
 
@@ -4188,7 +4188,7 @@ function _Browser_getViewport()
 {
 	return {
 		af: _Browser_getScene(),
-		ai: {
+		aj: {
 			F: _Browser_window.pageXOffset,
 			G: _Browser_window.pageYOffset,
 			x: _Browser_doc.documentElement.clientWidth,
@@ -4230,7 +4230,7 @@ function _Browser_getViewportOf(id)
 				x: node.scrollWidth,
 				s: node.scrollHeight
 			},
-			ai: {
+			aj: {
 				F: node.scrollLeft,
 				G: node.scrollTop,
 				x: node.clientWidth,
@@ -4265,13 +4265,13 @@ function _Browser_getElement(id)
 		var y = _Browser_window.pageYOffset;
 		return {
 			af: _Browser_getScene(),
-			ai: {
+			aj: {
 				F: x,
 				G: y,
 				x: _Browser_doc.documentElement.clientWidth,
 				s: _Browser_doc.documentElement.clientHeight
 			},
-			an: {
+			ao: {
 				F: x + rect.left,
 				G: y + rect.top,
 				x: rect.width,
@@ -5248,17 +5248,18 @@ var author$project$Main$viewBody = function (model) {
 					author$project$Main$viewLink('#reviews/the-century-of-the-self'),
 					author$project$Main$viewLink('#reviews/public-opinion'),
 					author$project$Main$viewLink('#reviews/shah-of-shahs')
-				]))
+				])),
+			elm$html$Html$text('Hallo Welt! 123')
 		]);
 };
 var author$project$Main$view = function (model) {
 	return {
-		al: author$project$Main$viewBody(model),
-		az: 'URL Interceptor'
+		am: author$project$Main$viewBody(model),
+		ai: 'URL Interceptor'
 	};
 };
 var elm$browser$Browser$application = _Browser_application;
 var author$project$Main$main = elm$browser$Browser$application(
-	{as: author$project$Main$init, au: author$project$Main$UrlChanged, av: author$project$Main$LinkClicked, ay: author$project$Main$subscriptions, aA: author$project$Main$update, aB: author$project$Main$view});
+	{au: author$project$Main$init, aw: author$project$Main$UrlChanged, ax: author$project$Main$LinkClicked, aA: author$project$Main$subscriptions, aC: author$project$Main$update, aD: author$project$Main$view});
 _Platform_export({'Main':{'init':author$project$Main$main(
 	elm$json$Json$Decode$succeed(0))(0)}});}(this));
