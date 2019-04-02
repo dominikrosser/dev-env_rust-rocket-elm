@@ -793,66 +793,6 @@ var _List_sortWith = F2(function(f, xs)
 
 
 
-// MATH
-
-var _Basics_add = F2(function(a, b) { return a + b; });
-var _Basics_sub = F2(function(a, b) { return a - b; });
-var _Basics_mul = F2(function(a, b) { return a * b; });
-var _Basics_fdiv = F2(function(a, b) { return a / b; });
-var _Basics_idiv = F2(function(a, b) { return (a / b) | 0; });
-var _Basics_pow = F2(Math.pow);
-
-var _Basics_remainderBy = F2(function(b, a) { return a % b; });
-
-// https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
-var _Basics_modBy = F2(function(modulus, x)
-{
-	var answer = x % modulus;
-	return modulus === 0
-		? _Debug_crash(11)
-		:
-	((answer > 0 && modulus < 0) || (answer < 0 && modulus > 0))
-		? answer + modulus
-		: answer;
-});
-
-
-// TRIGONOMETRY
-
-var _Basics_pi = Math.PI;
-var _Basics_e = Math.E;
-var _Basics_cos = Math.cos;
-var _Basics_sin = Math.sin;
-var _Basics_tan = Math.tan;
-var _Basics_acos = Math.acos;
-var _Basics_asin = Math.asin;
-var _Basics_atan = Math.atan;
-var _Basics_atan2 = F2(Math.atan2);
-
-
-// MORE MATH
-
-function _Basics_toFloat(x) { return x; }
-function _Basics_truncate(n) { return n | 0; }
-function _Basics_isInfinite(n) { return n === Infinity || n === -Infinity; }
-
-var _Basics_ceiling = Math.ceil;
-var _Basics_floor = Math.floor;
-var _Basics_round = Math.round;
-var _Basics_sqrt = Math.sqrt;
-var _Basics_log = Math.log;
-var _Basics_isNaN = isNaN;
-
-
-// BOOLEANS
-
-function _Basics_not(bool) { return !bool; }
-var _Basics_and = F2(function(a, b) { return a && b; });
-var _Basics_or  = F2(function(a, b) { return a || b; });
-var _Basics_xor = F2(function(a, b) { return a !== b; });
-
-
-
 var _String_cons = F2(function(chr, str)
 {
 	return chr + str;
@@ -1162,6 +1102,66 @@ function _String_fromList(chars)
 	return _List_toArray(chars).join('');
 }
 
+
+
+
+// MATH
+
+var _Basics_add = F2(function(a, b) { return a + b; });
+var _Basics_sub = F2(function(a, b) { return a - b; });
+var _Basics_mul = F2(function(a, b) { return a * b; });
+var _Basics_fdiv = F2(function(a, b) { return a / b; });
+var _Basics_idiv = F2(function(a, b) { return (a / b) | 0; });
+var _Basics_pow = F2(Math.pow);
+
+var _Basics_remainderBy = F2(function(b, a) { return a % b; });
+
+// https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
+var _Basics_modBy = F2(function(modulus, x)
+{
+	var answer = x % modulus;
+	return modulus === 0
+		? _Debug_crash(11)
+		:
+	((answer > 0 && modulus < 0) || (answer < 0 && modulus > 0))
+		? answer + modulus
+		: answer;
+});
+
+
+// TRIGONOMETRY
+
+var _Basics_pi = Math.PI;
+var _Basics_e = Math.E;
+var _Basics_cos = Math.cos;
+var _Basics_sin = Math.sin;
+var _Basics_tan = Math.tan;
+var _Basics_acos = Math.acos;
+var _Basics_asin = Math.asin;
+var _Basics_atan = Math.atan;
+var _Basics_atan2 = F2(Math.atan2);
+
+
+// MORE MATH
+
+function _Basics_toFloat(x) { return x; }
+function _Basics_truncate(n) { return n | 0; }
+function _Basics_isInfinite(n) { return n === Infinity || n === -Infinity; }
+
+var _Basics_ceiling = Math.ceil;
+var _Basics_floor = Math.floor;
+var _Basics_round = Math.round;
+var _Basics_sqrt = Math.sqrt;
+var _Basics_log = Math.log;
+var _Basics_isNaN = isNaN;
+
+
+// BOOLEANS
+
+function _Basics_not(bool) { return !bool; }
+var _Basics_and = F2(function(a, b) { return a && b; });
+var _Basics_or  = F2(function(a, b) { return a || b; });
+var _Basics_xor = F2(function(a, b) { return a !== b; });
 
 
 function _Url_percentEncode(string)
@@ -4333,9 +4333,12 @@ var author$project$Main$LinkClicked = function (a) {
 var author$project$Main$UrlChanged = function (a) {
 	return {$: 1, a: a};
 };
-var author$project$Main$NotFound = 2;
-var author$project$Main$Home = 0;
-var author$project$Main$Posts = 1;
+var author$project$Main$NotFoundRoute = {$: 3};
+var author$project$Main$HomeRoute = {$: 0};
+var author$project$Main$PostRoute = function (a) {
+	return {$: 2, a: a};
+};
+var author$project$Main$PostsRoute = {$: 1};
 var elm$core$Basics$EQ = 1;
 var elm$core$Basics$LT = 0;
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
@@ -4416,6 +4419,11 @@ var elm$core$Set$toList = function (_n0) {
 	var dict = _n0;
 	return elm$core$Dict$keys(dict);
 };
+var elm$core$Maybe$Just = function (a) {
+	return {$: 0, a: a};
+};
+var elm$core$Maybe$Nothing = {$: 1};
+var elm$core$String$toInt = _String_toInt;
 var elm$core$Basics$apL = F2(
 	function (f, x) {
 		return f(x);
@@ -4423,6 +4431,44 @@ var elm$core$Basics$apL = F2(
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
+var elm$url$Url$Parser$Parser = elm$core$Basics$identity;
+var elm$url$Url$Parser$State = F5(
+	function (visited, unvisited, params, frag, value) {
+		return {n: frag, p: params, m: unvisited, i: value, q: visited};
+	});
+var elm$url$Url$Parser$custom = F2(
+	function (tipe, stringToSomething) {
+		return function (_n0) {
+			var visited = _n0.q;
+			var unvisited = _n0.m;
+			var params = _n0.p;
+			var frag = _n0.n;
+			var value = _n0.i;
+			if (!unvisited.b) {
+				return _List_Nil;
+			} else {
+				var next = unvisited.a;
+				var rest = unvisited.b;
+				var _n2 = stringToSomething(next);
+				if (!_n2.$) {
+					var nextValue = _n2.a;
+					return _List_fromArray(
+						[
+							A5(
+							elm$url$Url$Parser$State,
+							A2(elm$core$List$cons, next, visited),
+							rest,
+							params,
+							frag,
+							value(nextValue))
+						]);
+				} else {
+					return _List_Nil;
+				}
+			}
+		};
+	});
+var elm$url$Url$Parser$int = A2(elm$url$Url$Parser$custom, 'NUMBER', elm$core$String$toInt);
 var elm$core$Basics$add = _Basics_add;
 var elm$core$Basics$gt = _Utils_gt;
 var elm$core$List$foldl = F3(
@@ -4516,11 +4562,6 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$url$Url$Parser$Parser = elm$core$Basics$identity;
-var elm$url$Url$Parser$State = F5(
-	function (visited, unvisited, params, frag, value) {
-		return {n: frag, p: params, m: unvisited, i: value, q: visited};
-	});
 var elm$url$Url$Parser$mapState = F2(
 	function (func, _n0) {
 		var visited = _n0.q;
@@ -4605,6 +4646,17 @@ var elm$url$Url$Parser$s = function (str) {
 		}
 	};
 };
+var elm$url$Url$Parser$slash = F2(
+	function (_n0, _n1) {
+		var parseBefore = _n0;
+		var parseAfter = _n1;
+		return function (state) {
+			return A2(
+				elm$core$List$concatMap,
+				parseAfter,
+				parseBefore(state));
+		};
+	});
 var elm$url$Url$Parser$top = function (state) {
 	return _List_fromArray(
 		[state]);
@@ -4612,11 +4664,18 @@ var elm$url$Url$Parser$top = function (state) {
 var author$project$Main$routeParser = elm$url$Url$Parser$oneOf(
 	_List_fromArray(
 		[
-			A2(elm$url$Url$Parser$map, 0, elm$url$Url$Parser$top),
+			A2(elm$url$Url$Parser$map, author$project$Main$HomeRoute, elm$url$Url$Parser$top),
 			A2(
 			elm$url$Url$Parser$map,
-			1,
-			elm$url$Url$Parser$s('posts'))
+			author$project$Main$PostsRoute,
+			elm$url$Url$Parser$s('posts')),
+			A2(
+			elm$url$Url$Parser$map,
+			author$project$Main$PostRoute,
+			A2(
+				elm$url$Url$Parser$slash,
+				elm$url$Url$Parser$s('posts'),
+				elm$url$Url$Parser$int))
 		]));
 var elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
@@ -4627,10 +4686,6 @@ var elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
-var elm$core$Maybe$Just = function (a) {
-	return {$: 0, a: a};
-};
-var elm$core$Maybe$Nothing = {$: 1};
 var elm$url$Url$Parser$getFirstMatch = function (states) {
 	getFirstMatch:
 	while (true) {
@@ -5270,7 +5325,7 @@ var elm$url$Url$Parser$parse = F2(
 var author$project$Main$toRoute = function (url) {
 	return A2(
 		elm$core$Maybe$withDefault,
-		2,
+		author$project$Main$NotFoundRoute,
 		A2(elm$url$Url$Parser$parse, author$project$Main$routeParser, url));
 };
 var elm$core$Basics$False = 1;
@@ -5773,7 +5828,6 @@ var elm$core$String$left = F2(
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
 var elm$core$String$contains = _String_contains;
-var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {T: fragment, U: host, X: path, Z: port_, ab: protocol, ac: query};
@@ -5963,16 +6017,24 @@ var author$project$Main$homePage = function (model) {
 var author$project$Main$notFoundPage = function (model) {
 	return elm$html$Html$text('Not Found Page');
 };
+var author$project$Main$postPage = F2(
+	function (model, postId) {
+		return elm$html$Html$text(
+			'Post Page (Id: ' + elm$core$String$fromInt(postId));
+	});
 var author$project$Main$postsPage = function (model) {
 	return elm$html$Html$text('Posts Page');
 };
 var author$project$Main$viewPage = function (model) {
 	var _n0 = model.F;
-	switch (_n0) {
+	switch (_n0.$) {
 		case 0:
 			return author$project$Main$homePage(model);
 		case 1:
 			return author$project$Main$postsPage(model);
+		case 2:
+			var id = _n0.a;
+			return A2(author$project$Main$postPage, model, id);
 		default:
 			return author$project$Main$notFoundPage(model);
 	}

@@ -9,7 +9,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Url
-import Url.Parser
+import Url.Parser exposing ((</>))
 
 
 
@@ -50,9 +50,10 @@ type alias Post =
 
 
 type Route
-    = Home
-    | Posts
-    | NotFound
+    = HomeRoute
+    | PostsRoute
+    | PostRoute Int
+    | NotFoundRoute
 
 
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -90,14 +91,15 @@ update msg model =
 
 toRoute : Url.Url -> Route
 toRoute url =
-    Maybe.withDefault NotFound (Url.Parser.parse routeParser url)
+    Maybe.withDefault NotFoundRoute (Url.Parser.parse routeParser url)
 
 
 routeParser : Url.Parser.Parser (Route -> a) a
 routeParser =
     Url.Parser.oneOf
-        [ Url.Parser.map Home Url.Parser.top
-        , Url.Parser.map Posts (Url.Parser.s "posts")
+        [ Url.Parser.map HomeRoute  (Url.Parser.top)
+        , Url.Parser.map PostsRoute (Url.Parser.s "posts")
+        , Url.Parser.map PostRoute  (Url.Parser.s "posts" </> Url.Parser.int)
         ]
 
 
@@ -156,13 +158,16 @@ viewContent model =
 viewPage : Model -> Html Msg
 viewPage model =
     case model.route of
-        Home ->
+        HomeRoute ->
             homePage model
 
-        Posts ->
+        PostsRoute ->
             postsPage model
+        
+        PostRoute id ->
+            postPage model id
 
-        NotFound ->
+        NotFoundRoute ->
             notFoundPage model
 
 
@@ -181,6 +186,11 @@ homePage model =
 postsPage : Model -> Html Msg
 postsPage model =
     text "Posts Page"
+
+
+postPage : Model -> Int -> Html Msg
+postPage model postId =
+    text ("Post Page (Id: " ++ String.fromInt postId)
 
 
 notFoundPage : Model -> Html Msg
