@@ -324,6 +324,7 @@ viewPostsWebData postsWD =
       RemoteData.Failure httpError ->
         div []
           [ text "Could not load posts from server"
+          , br [] []
           , text ("Error: " ++ httpErrorToString httpError)
           ]
 
