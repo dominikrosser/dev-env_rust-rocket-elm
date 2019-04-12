@@ -9,7 +9,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
-import Json.Decode
+import Json.Decode as JD 
 import RemoteData exposing (WebData)
 import Url
 import Url.Parser exposing ((</>))
@@ -38,6 +38,8 @@ main =
 type alias Model =
     { key : Nav.Key
     , route : Route
+    , posts : WebData (List Post)
+    , post : WebData Post
     }
 
 
@@ -59,12 +61,33 @@ type Route
     | NotFoundRoute
 
 
+
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
+    let
+        route = toRoute url
+
+        posts =
+            case route of
+              PostsRoute ->
+                RemoteData.Loading
+
+              _ ->
+                RemoteData.NotAsked
+
+        post =
+            case route of
+              PostRoute _ ->
+                RemoteData.Loading
+
+              _ -> RemoteData.NotAsked
+    in
     ( { key = key
-      , route = toRoute url
+      , route = route
+      , posts = posts
+      , post = post
       }
-    , Cmd.none
+    , loadDataForRouteCmd route
     )
 
 
@@ -75,6 +98,10 @@ init _ url key =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    -- Data Responses:
+    | PostsDataReceived (WebData (List Post))
+    | PostDataReceived (WebData (Post))
+
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -89,7 +116,50 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | route = toRoute url }, Cmd.none )
+            changePage model url
+
+        PostsDataReceived postsData ->
+            ( { model
+              | posts = postsData
+              }
+            , Cmd.none )
+
+        PostDataReceived postData ->
+            ( { model
+              | post = postData
+              }
+            , Cmd.none )
+
+
+changePage : Model -> Url.Url -> ( Model, Cmd Msg )
+changePage model url =
+    let
+        route = toRoute url
+
+        posts =
+            case route of
+              PostsRoute ->
+                RemoteData.Loading
+
+              _ ->
+                RemoteData.NotAsked
+
+        post =
+            case route of
+              PostRoute _ ->
+                RemoteData.Loading
+
+              _ ->
+                RemoteData.NotAsked
+    in
+    ( { model
+      | route = route
+      , posts = posts
+      , post = post
+      }
+    , loadDataForRouteCmd route
+    )
+    
 
 
 toRoute : Url.Url -> Route
@@ -113,6 +183,41 @@ routeParser =
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.none
+
+
+-- WEB REQUESTS / REST & JSON PARSERS / DECODERS
+
+
+loadDataForRouteCmd : Route -> Cmd Msg
+loadDataForRouteCmd route =
+    case route of
+        HomeRoute ->
+          Cmd.none
+
+        PostsRoute ->
+          fetchPostsCmd
+
+        PostRoute _ ->
+          Cmd.none
+
+        NotFoundRoute ->
+          Cmd.none
+
+
+postDecoder: JD.Decoder Post
+postDecoder =
+    JD.map3 Post
+        (JD.field "id" JD.int)
+        (JD.field "title" JD.string)
+        (JD.field "author" JD.string)
+
+
+fetchPostsCmd: Cmd Msg
+fetchPostsCmd =
+    Http.get
+        { url = "https://localhost:8000/api/v1/posts"
+        , expect = Http.expectJson (RemoteData.fromResult >> PostsDataReceived) (JD.list postDecoder)
+        }
 
 
 
@@ -191,7 +296,10 @@ homePage model =
 
 postsPage : Model -> Html Msg
 postsPage model =
-    text "Posts Page"
+    div []
+      [ text "Posts Page"
+      , viewPostsWebData model.posts 
+      ]
 
 
 postPage : Model -> Int -> Html Msg
@@ -199,22 +307,34 @@ postPage model postId =
     text ("Post Page (Id: " ++ String.fromInt postId)
 
 
-postsTableHeader : Html Msg
-postsTableHeader =
-    tr []
-        [ th [] [ text "ID" ]
-        , th [] [ text "Title" ]
-        , th [] [ text "Author" ]
-        ]
+notFoundPage : Model -> Html Msg
+notFoundPage model =
+    text "Not Found Page" 
+
+
+viewPostsWebData : WebData (List Post) -> Html Msg
+viewPostsWebData postsWD =
+    case postsWD of
+      RemoteData.NotAsked ->
+        div [] [ text "Posts not requested from server yet" ]
+
+      RemoteData.Loading ->
+        div [] [ text "Loading posts" ]
+
+      RemoteData.Failure error ->
+        div [] [ text "Could not load posts from server" ]
+
+      RemoteData.Success posts ->
+        viewPosts posts
 
 
 viewPosts : List Post -> Html Msg
 viewPosts posts =
     div []
-        [ h3 [] [ text "Posts" ]
-        , table []
+      [ h3 [] [ text "Posts" ]
+      , table []
             ([ postsTableHeader ] ++ List.map viewPost posts)
-        ]
+      ]
 
 
 viewPost : Post -> Html Msg
@@ -225,7 +345,10 @@ viewPost post =
         , td [] [ text post.subtitle ]
         ]
 
-
-notFoundPage : Model -> Html Msg
-notFoundPage model =
-    text "Not Found Page"
+postsTableHeader : Html Msg
+postsTableHeader =
+    tr []
+      [ th [] [ text "ID" ]
+      , th [] [ text "Title" ]
+      , th [] [ text "Author" ]
+      ]
