@@ -4998,8 +4998,8 @@ var author$project$Main$postDecoder = A4(
 	elm$json$Json$Decode$map3,
 	author$project$Main$Post,
 	A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int),
-	A2(elm$json$Json$Decode$field, 'title', elm$json$Json$Decode$string),
-	A2(elm$json$Json$Decode$field, 'author', elm$json$Json$Decode$string));
+	A2(elm$json$Json$Decode$field, 'subtitle', elm$json$Json$Decode$string),
+	A2(elm$json$Json$Decode$field, 'title', elm$json$Json$Decode$string));
 var elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -6579,6 +6579,20 @@ var author$project$Main$postPage = F2(
 		return elm$html$Html$text(
 			'Post Page (Id: ' + elm$core$String$fromInt(postId));
 	});
+var author$project$Main$httpErrorToString = function (httpError) {
+	switch (httpError.$) {
+		case 0:
+			return 'Bad Url (did not provide a valid URL)';
+		case 1:
+			return 'TimeoutError (took too long to get a response)';
+		case 2:
+			return 'NetworkError';
+		case 3:
+			return 'Bad Status (got a response back but status code indicates failure)';
+		default:
+			return 'Bad Body (body of response was smth. unexpected)';
+	}
+};
 var elm$html$Html$th = _VirtualDom_node('th');
 var elm$html$Html$tr = _VirtualDom_node('tr');
 var author$project$Main$postsTableHeader = A2(
@@ -6683,13 +6697,15 @@ var author$project$Main$viewPostsWebData = function (postsWD) {
 						elm$html$Html$text('Loading posts')
 					]));
 		case 2:
-			var error = postsWD.a;
+			var httpError = postsWD.a;
 			return A2(
 				elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
 					[
-						elm$html$Html$text('Could not load posts from server')
+						elm$html$Html$text('Could not load posts from server'),
+						elm$html$Html$text(
+						'Error: ' + author$project$Main$httpErrorToString(httpError))
 					]));
 		default:
 			var posts = postsWD.a;

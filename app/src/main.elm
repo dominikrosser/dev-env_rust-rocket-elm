@@ -208,8 +208,8 @@ postDecoder: JD.Decoder Post
 postDecoder =
     JD.map3 Post
         (JD.field "id" JD.int)
+        (JD.field "subtitle" JD.string)
         (JD.field "title" JD.string)
-        (JD.field "author" JD.string)
 
 
 fetchPostsCmd: Cmd Msg
@@ -321,8 +321,11 @@ viewPostsWebData postsWD =
       RemoteData.Loading ->
         div [] [ text "Loading posts" ]
 
-      RemoteData.Failure error ->
-        div [] [ text "Could not load posts from server" ]
+      RemoteData.Failure httpError ->
+        div []
+          [ text "Could not load posts from server"
+          , text ("Error: " ++ httpErrorToString httpError)
+          ]
 
       RemoteData.Success posts ->
         viewPosts posts
@@ -340,10 +343,10 @@ viewPosts posts =
 viewPost : Post -> Html Msg
 viewPost post =
     tr []
-        [ td [] [ text (String.fromInt post.id) ]
-        , td [] [ text post.title ]
-        , td [] [ text post.subtitle ]
-        ]
+      [ td [] [ text (String.fromInt post.id) ]
+      , td [] [ text post.title ]
+      , td [] [ text post.subtitle ]
+      ]
 
 postsTableHeader : Html Msg
 postsTableHeader =
@@ -352,3 +355,22 @@ postsTableHeader =
       , th [] [ text "Title" ]
       , th [] [ text "Author" ]
       ]
+
+
+httpErrorToString : Http.Error -> String
+httpErrorToString httpError =
+    case httpError of
+      Http.BadUrl _ ->
+        "Bad Url (did not provide a valid URL)"
+
+      Http.Timeout ->
+        "TimeoutError (took too long to get a response)"
+
+      Http.NetworkError ->
+        "NetworkError"
+
+      Http.BadStatus _ ->
+        "Bad Status (got a response back but status code indicates failure)"
+
+      Http.BadBody _ ->
+        "Bad Body (body of response was smth. unexpected)"
