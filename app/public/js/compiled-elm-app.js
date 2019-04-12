@@ -5000,6 +5000,71 @@ var author$project$Main$postDecoder = A4(
 	A2(elm$json$Json$Decode$field, 'id', elm$json$Json$Decode$int),
 	A2(elm$json$Json$Decode$field, 'subtitle', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'title', elm$json$Json$Decode$string));
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$json$Json$Decode$list = _Json_decodeList;
+var author$project$Main$postsDecoder = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['result']),
+	elm$json$Json$Decode$list(author$project$Main$postDecoder));
 var elm$core$Basics$composeR = F3(
 	function (f, g, x) {
 		return g(
@@ -5713,61 +5778,6 @@ var elm$http$Http$onEffects = F4(
 			},
 			A3(elm$http$Http$updateReqs, router, cmds, state.ao));
 	});
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
 var elm$core$List$maybeCons = F3(
 	function (f, mx, xs) {
 		var _n0 = f(mx);
@@ -5881,7 +5891,6 @@ var elm$http$Http$get = function (r) {
 	return elm$http$Http$request(
 		{az: elm$http$Http$emptyBody, aC: r.aC, e: _List_Nil, h: 'GET', i: elm$core$Maybe$Nothing, j: elm$core$Maybe$Nothing, aU: r.aU});
 };
-var elm$json$Json$Decode$list = _Json_decodeList;
 var krisajenkins$remotedata$RemoteData$Failure = function (a) {
 	return {$: 2, a: a};
 };
@@ -5902,7 +5911,7 @@ var author$project$Main$fetchPostsCmd = elm$http$Http$get(
 		aC: A2(
 			elm$http$Http$expectJson,
 			A2(elm$core$Basics$composeR, krisajenkins$remotedata$RemoteData$fromResult, author$project$Main$PostsDataReceived),
-			elm$json$Json$Decode$list(author$project$Main$postDecoder)),
+			author$project$Main$postsDecoder),
 		aU: './api/v1/posts'
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -6590,7 +6599,8 @@ var author$project$Main$httpErrorToString = function (httpError) {
 		case 3:
 			return 'Bad Status (got a response back but status code indicates failure)';
 		default:
-			return 'Bad Body (body of response was smth. unexpected)';
+			var str = httpError.a;
+			return 'Bad Body (body of response was smth. unexpected) ' + str;
 	}
 };
 var elm$html$Html$th = _VirtualDom_node('th');
@@ -6678,6 +6688,7 @@ var author$project$Main$viewPosts = function (posts) {
 					A2(elm$core$List$map, author$project$Main$viewPost, posts)))
 			]));
 };
+var elm$html$Html$br = _VirtualDom_node('br');
 var author$project$Main$viewPostsWebData = function (postsWD) {
 	switch (postsWD.$) {
 		case 0:
@@ -6704,6 +6715,7 @@ var author$project$Main$viewPostsWebData = function (postsWD) {
 				_List_fromArray(
 					[
 						elm$html$Html$text('Could not load posts from server'),
+						A2(elm$html$Html$br, _List_Nil, _List_Nil),
 						elm$html$Html$text(
 						'Error: ' + author$project$Main$httpErrorToString(httpError))
 					]));
@@ -6736,7 +6748,6 @@ var author$project$Main$viewPage = function (model) {
 			return author$project$Main$notFoundPage(model);
 	}
 };
-var elm$html$Html$br = _VirtualDom_node('br');
 var author$project$Main$viewContent = function (model) {
 	return A2(
 		elm$html$Html$div,

@@ -212,11 +212,16 @@ postDecoder =
         (JD.field "title" JD.string)
 
 
+postsDecoder: JD.Decoder (List Post)
+postsDecoder =
+    JD.at [ "result" ] (JD.list postDecoder)
+
+
 fetchPostsCmd: Cmd Msg
 fetchPostsCmd =
     Http.get
         { url = "./api/v1/posts"
-        , expect = Http.expectJson (RemoteData.fromResult >> PostsDataReceived) (JD.list postDecoder)
+        , expect = Http.expectJson (RemoteData.fromResult >> PostsDataReceived) postsDecoder
         }
 
 
@@ -373,5 +378,5 @@ httpErrorToString httpError =
       Http.BadStatus _ ->
         "Bad Status (got a response back but status code indicates failure)"
 
-      Http.BadBody _ ->
-        "Bad Body (body of response was smth. unexpected)"
+      Http.BadBody str ->
+        "Bad Body (body of response was smth. unexpected) " ++ str
