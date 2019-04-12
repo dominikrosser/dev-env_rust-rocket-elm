@@ -215,7 +215,7 @@ postDecoder =
 fetchPostsCmd: Cmd Msg
 fetchPostsCmd =
     Http.get
-        { url = "https://localhost:8000/api/v1/posts"
+        { url = "./api/v1/posts"
         , expect = Http.expectJson (RemoteData.fromResult >> PostsDataReceived) (JD.list postDecoder)
         }
 

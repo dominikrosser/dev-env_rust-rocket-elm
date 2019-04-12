@@ -3,6 +3,7 @@
 #![feature(proc_macro_hygiene)] // TODO: This ist for rocket but what does this macro do?
 #![feature(decl_macro)]         // Allows us to create declarative macros
 #![allow(dead_code)]            // Disable warning for dead code
+#![allow(unused_imports)]       // Disable warning for unused imports in dev phase
 
 
 #[macro_use]                    //TODO: Remove imports, import with use only since rust 2018
@@ -14,12 +15,14 @@ extern crate serde_derive;      //TODO: Remove imports, import with use only sin
 extern crate serde_json;        //TODO: Remove imports, import with use only since rust 2018
 #[macro_use]
 extern crate rocket_contrib;    //TODO: Remove imports, import with use only since rust 2018
+extern crate rocket_cors;
 
 mod schema;         // Contains the db schema of diesel
 mod models;         // Contains the db models and functionality to read, update, insert
 mod db;             // Contains helpers for the database connection pool 
 mod static_files;   // Contains api routes for serving static files
 mod routes;         // Contains api routs that serve json
+mod cors_options;   // Contains function to create CORS options (rocket_cors)
 
 use ::dotenv::dotenv;
 use ::std::env;
@@ -46,10 +49,15 @@ fn init_rocket() -> rocket::Rocket {
         )
         // Catch every other rout with a 404
         .register(catchers![routes::not_found])
+        // Set custom CORS options
+        // Doesn't currently seem to be supported
+        // (Fairing trait not implemented properly by the creator of rocket_cors)
+        //.attach(cors_options::cors_options())
 }
 
 fn launch_api_and_app() {
-    init_rocket().launch();
+    init_rocket()
+        .launch();
 }
 
 fn main() {

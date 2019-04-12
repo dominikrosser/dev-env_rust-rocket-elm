@@ -5903,7 +5903,7 @@ var author$project$Main$fetchPostsCmd = elm$http$Http$get(
 			elm$http$Http$expectJson,
 			A2(elm$core$Basics$composeR, krisajenkins$remotedata$RemoteData$fromResult, author$project$Main$PostsDataReceived),
 			elm$json$Json$Decode$list(author$project$Main$postDecoder)),
-		aU: 'https://localhost:8000/api/v1/posts'
+		aU: './api/v1/posts'
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
